@@ -9,6 +9,6 @@ import org.springframework.shell.jline.PromptProvider;
 public class CustomShellPrompt implements PromptProvider {
     @Override
     public AttributedString getPrompt() {
-        return new AttributedString("AyoubShell:>");
+        return new AttributedString("Shell:>");
     }
 }

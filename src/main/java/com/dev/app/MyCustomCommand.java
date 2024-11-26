@@ -1,11 +1,21 @@
 package com.dev.app;
 
+import com.dev.app.entities.Product;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
+import java.util.Optional;
+
 @ShellComponent
 public class MyCustomCommand {
+    private  ProductRepository productRepository;
+
+    public MyCustomCommand(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
     @ShellMethod(key = "hello")
     public String hello(@ShellOption(defaultValue = "me") String name, @ShellOption(defaultValue = "1") int counter){
         StringBuilder stringBuilder = new StringBuilder();
@@ -18,5 +28,32 @@ public class MyCustomCommand {
     @ShellMethod(key = "test")
     public String test(){
         return  "Test Shell ";
+    }
+
+
+    @ShellMethod(key = "add")
+
+
+    public String add(@ShellOption(defaultValue = "inconnu") String name,@ShellOption(defaultValue = "0") double price){
+
+
+       Product p= productRepository.save(
+                Product.builder()
+                        .name(name)
+                        .price(price)
+                        .build()
+        );
+        return  p.toString();
+    }
+@ShellMethod(key = "findById")
+    public String  find(@ShellOption (defaultValue = "0") Long id){
+        Optional<Product> product= productRepository.findById(id);
+
+        if(
+                product.isPresent()
+        ){
+            return product.get().toString();
+        }
+        else return "Product not found"+id;
     }
 }
